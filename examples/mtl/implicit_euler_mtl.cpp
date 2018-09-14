@@ -39,11 +39,11 @@ struct system1_mtl4
 
     void operator()( const vec_mtl4 &x , vec_mtl4 &dxdt , double t )
     {
-        int size = mtl::size(x);
+        size_t size = mtl::size(x);
 
         dxdt[ 0 ] = -0.06*x[0];
 
-        for (int i =1; i< size ; ++i){
+        for (size_t i =1; i< size ; ++i){
 
             dxdt[ i ] = 4.2*x[i-1]-2.2*x[i]*x[i];
         }
@@ -55,12 +55,12 @@ struct jacobi1_mtl4
 {
     void operator()( const vec_mtl4 &x , mat_mtl4 &J , const double &t )
     {
-        int size = mtl::size(x);
-        mtl::matrix::inserter<mat_mtl4> ins(J);
+        size_t size = mtl::size(x);
+        mtl::mat::inserter<mat_mtl4> ins(J);
 
         ins[0][0]=-0.06;
 
-        for (int i =1; i< size ; ++i)
+        for (size_t i =1; i< size ; ++i)
         {
             ins[i][i-1] = + 4.2;
             ins[i][i] = -4.2*x[i];
@@ -75,11 +75,11 @@ struct system1_ublas
 
     void operator()( const vec_ublas &x , vec_ublas &dxdt , double t )
     {
-        int size = x.size();
+        size_t size = x.size();
 
         dxdt[ 0 ] = -0.06*x[0];
 
-        for (int i =1; i< size ; ++i){
+        for (size_t i =1; i< size ; ++i){
 
             dxdt[ i ] = 4.2*x[i-1]-2.2*x[i]*x[i];
         }
@@ -91,12 +91,12 @@ struct jacobi1_ublas
 {
     void operator()( const vec_ublas &x , mat_ublas &J , const double &t )
     {
-        int size = x.size();
-// mtl::matrix::inserter<mat_mtl4> ins(J);
+		size_t size = x.size();
+// mtl::mat::inserter<mat_mtl4> ins(J);
 
         J(0,0)=-0.06;
 
-        for (int i =1; i< size ; ++i){
+        for (size_t i =1; i< size ; ++i){
 //ins[i][0]=120.0*x[i];
             J(i,i-1) = + 4.2;
             J(i,i) = -4.2*x[i];
@@ -110,10 +110,10 @@ struct system2_mtl4
 
     void operator()( const vec_mtl4 &x , vec_mtl4 &dxdt , double t )
     {
-        int size = mtl::size(x);
+		size_t size = mtl::size(x);
 
 
-        for (int i =0; i< size/5 ; i+=5){
+        for (size_t i =0; i< size/5 ; i+=5){
 
             dxdt[ i ] = -0.5*x[i];
             dxdt[i+1]= +25*x[i+1]*x[i+2]-740*x[i+3]*x[i+3]+4.2e-2*x[i];
@@ -130,27 +130,25 @@ struct jacobi2_mtl4
 {
     void operator()( const vec_mtl4 &x , mat_mtl4 &J , const double &t )
     {
-        int size = mtl::size(x);
-        mtl::matrix::inserter<mat_mtl4> ins(J);
+		size_t size = mtl::size(x);
+        mtl::mat::inserter<mat_mtl4> ins(J);
 
-        for (int i =0; i< size/5 ; i+=5){
+        for (size_t i =0; i< size/5 ; i+=5){
 
-            ins[ i ][i] = -0.5;
-            ins[i+1][i+1]=25*x[i+2];
-            ins[i+1][i+2] = 25*x[i+1];
+            ins[ i ][i]   = -0.5;
+            ins[i+1][i+1] =  25*x[i+2];
+            ins[i+1][i+2] =  25*x[i+1];
             ins[i+1][i+3] = -740*2*x[i+3];
-            ins[i+1][i] =+4.2e-2;
+            ins[i+1][i]   = +4.2e-2;
 
-            ins[i+2][i]= 50*x[i];
-            ins[i+2][i+3]= -740*2*x[i+3];
+            ins[i+2][i]   = 50*x[i];
+            ins[i+2][i+3] = -740*2*x[i+3];
             ins[i+3][i+1] = -25*x[i+2];
             ins[i+3][i+2] = -25*x[i+1];
             ins[i+3][i+3] = +740*2*x[i+3];
-            ins[i+4][i] = 0.25*x[i+1];
-            ins[i+4][i+1] =0.25*x[i];
-            ins[i+4][i+3]=-44.5;
-
-
+            ins[i+4][i]   = 0.25*x[i+1];
+            ins[i+4][i+1] = 0.25*x[i];
+            ins[i+4][i+3] = -44.5;
 
         }
     }
@@ -163,13 +161,13 @@ struct system2_ublas
 
     void operator()( const vec_ublas &x , vec_ublas &dxdt , double t )
     {
-        int size = x.size();
-        for (int i =0; i< size/5 ; i+=5){
+		size_t size = x.size();
+        for (size_t i =0; i< size/5 ; i+=5){
 
             dxdt[ i ] = -4.2e-2*x[i];
-            dxdt[i+1]= +25*x[i+1]*x[i+2]-740*x[i+3]*x[i+3]+4.2e-2*x[i];
-            dxdt[i+2]= +25*x[i]*x[i]-740*x[i+3]*x[i+3];
-            dxdt[i+3]= -25*x[i+1]*x[i+2]+740*x[i+3]*x[i+3];
+            dxdt[i+1] = +25*x[i+1]*x[i+2]-740*x[i+3]*x[i+3]+4.2e-2*x[i];
+            dxdt[i+2] = +25*x[i]*x[i]-740*x[i+3]*x[i+3];
+            dxdt[i+3] = -25*x[i+1]*x[i+2]+740*x[i+3]*x[i+3];
             dxdt[i+4] = 0.250*x[i]*x[i+1]-44.5*x[i+3];
 
         }
@@ -181,24 +179,24 @@ struct jacobi2_ublas
 {
     void operator()( const vec_ublas &x , mat_ublas &J , const double &t )
     {
-        int size = x.size();
+		size_t size = x.size();
 
-        for (int i =0; i< size/5 ; i+=5){
+        for (size_t i =0; i< size/5 ; i+=5){
 
-            J(i ,i) = -4.2e-2;
-            J(i+1,i+1)=25*x[i+2];
-            J(i+1,i+2) = 25*x[i+1];
+            J(i ,i)    = -4.2e-2;
+            J(i+1,i+1) =  25*x[i+2];
+            J(i+1,i+2) =  25*x[i+1];
             J(i+1,i+3) = -740*2*x[i+3];
-            J(i+1,i) =+4.2e-2;
+            J(i+1,i)   = +4.2e-2;
 
-            J(i+2,i)= 50*x[i];
-            J(i+2,i+3)= -740*2*x[i+3];
+            J(i+2,i)   =  50*x[i];
+            J(i+2,i+3) = -740*2*x[i+3];
             J(i+3,i+1) = -25*x[i+2];
             J(i+3,i+2) = -25*x[i+1];
             J(i+3,i+3) = +740*2*x[i+3];
-            J(i+4,i) = 0.25*x[i+1];
-            J(i+4,i+1) =0.25*x[i];
-            J(i+4,i+3)=-44.5;
+            J(i+4,i)   =  0.25*x[i+1];
+            J(i+4,i+1) =  0.25*x[i];
+            J(i+4,i+3) = -44.5;
 
 
 
@@ -211,7 +209,7 @@ struct jacobi2_ublas
 
 
 
-void testRidiculouslyMassiveArray( int size )
+void testRidiculouslyMassiveArray( size_t size )
 {
     typedef boost::numeric::odeint::implicit_euler_mtl4 < double > mtl4stepper;
     typedef boost::numeric::odeint::implicit_euler< double > booststepper;
@@ -231,7 +229,7 @@ void testRidiculouslyMassiveArray( int size )
     clock_t tend_mtl4 = clock() ;
 
     clog << x[0] << endl;
-    clog << num_of_steps_mtl4 << " time elapsed: " << (double)(tend_mtl4-tstart_mtl4 )/CLOCKS_PER_SEC << endl;
+    clog << num_of_steps_mtl4 << " time elapsed MTL4  stepper: " << (double)(tend_mtl4-tstart_mtl4 )/CLOCKS_PER_SEC << endl;
 
     vec_ublas x_ublas(size , 0.0);
     x_ublas[0]=1;
@@ -244,7 +242,7 @@ void testRidiculouslyMassiveArray( int size )
     clock_t tend_boost = clock() ;
     
     clog << x_ublas[0] << endl;
-    clog << num_of_steps_ublas << " time elapsed: " << (double)(tend_boost-tstart_boost)/CLOCKS_PER_SEC<< endl;
+    clog << num_of_steps_ublas << " time elapsed ublas stepper: " << (double)(tend_boost-tstart_boost)/CLOCKS_PER_SEC<< endl;
 
     clog << "dt_ublas/dt_mtl4 = " << (double)( tend_boost-tstart_boost )/( tend_mtl4-tstart_mtl4 ) << endl << endl;
     return ;
@@ -252,7 +250,7 @@ void testRidiculouslyMassiveArray( int size )
 
 
 
-void testRidiculouslyMassiveArray2( int size )
+void testRidiculouslyMassiveArray2( size_t size )
 {
     typedef boost::numeric::odeint::implicit_euler_mtl4 < double > mtl4stepper;
     typedef boost::numeric::odeint::implicit_euler< double > booststepper;
@@ -275,7 +273,7 @@ void testRidiculouslyMassiveArray2( int size )
     clock_t tend_mtl4 = clock() ;
     
     clog << x[0] << endl;
-    clog << num_of_steps_mtl4 << " time elapsed: " << (double)(tend_mtl4-tstart_mtl4 )/CLOCKS_PER_SEC << endl;
+    clog << num_of_steps_mtl4 << " time elapsed MTL4  stepper: " << (double)(tend_mtl4-tstart_mtl4 )/CLOCKS_PER_SEC << endl;
 
     vec_ublas x_ublas(size , 0.0);
     x_ublas[0]=100;
@@ -290,7 +288,7 @@ void testRidiculouslyMassiveArray2( int size )
     clock_t tend_boost = clock() ;
     
     clog << x_ublas[0] << endl;
-    clog << num_of_steps_ublas << " time elapsed: " << (double)(tend_boost-tstart_boost)/CLOCKS_PER_SEC<< endl;
+    clog << num_of_steps_ublas << " time elapsed ublas stepper: " << (double)(tend_boost-tstart_boost)/CLOCKS_PER_SEC<< endl;
 
     clog << "dt_ublas/dt_mtl4 = " << (double)( tend_boost-tstart_boost )/( tend_mtl4-tstart_mtl4 ) << endl << endl;
     return ;
