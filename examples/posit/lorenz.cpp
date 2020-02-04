@@ -17,7 +17,7 @@
 #include <iostream>
 
 //[ posit_lorenz_defs
-#include <posit>
+#include <universal/posit/posit>
 #include <boost/numeric/odeint.hpp>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
@@ -26,8 +26,9 @@ using namespace boost::numeric::odeint;
 
 static constexpr size_t nbits = 256;
 static constexpr size_t es = 2;
+using Real = sw::unum::posit<nbits, es>;
 
-using value_type = sw::unum::posit<nbits, es>;
+using value_type = float;
 using state_type = boost::array< value_type , 3 > ;
 //]
 
@@ -75,9 +76,9 @@ int main( int argc , char **argv )
     //[ mp_lorenz_int
     state_type x = {{ value_type( 10.0 ) , value_type( 10.0 ) , value_type( 10.0 ) }};
 
-    cout.precision( 50 );
+    cout.precision( 5 );
     integrate_const( runge_kutta4< state_type , value_type >() ,
-            lorenz() , x , value_type( 0.0 ) , value_type( 10.0 ) , value_type( value_type( 1.0 ) / value_type( 10.0 ) ) ,
+            lorenz() , x , value_type( 0.0 ) , value_type( 5.0 ) , value_type( 0.125f ) ,
             streaming_observer( cout ) );
     //]
 
