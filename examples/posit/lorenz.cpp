@@ -24,11 +24,11 @@
 using namespace std;
 using namespace boost::numeric::odeint;
 
-static constexpr size_t nbits = 256;
-static constexpr size_t es = 2;
+static constexpr size_t nbits = 64;
+static constexpr size_t es = 3;
 using Real = sw::unum::posit<nbits, es>;
 
-using value_type = float;
+using value_type = Real;
 using state_type = boost::array< value_type , 3 > ;
 //]
 
@@ -74,11 +74,11 @@ struct streaming_observer
 int main( int argc , char **argv )
 {
     //[ mp_lorenz_int
-    state_type x = {{ value_type( 10.0 ) , value_type( 10.0 ) , value_type( 10.0 ) }};
+    state_type x = {{ value_type( 10.0 ) , value_type( 1.0 ) , value_type( 1.0 ) }};
 
     cout.precision( 5 );
     integrate_const( runge_kutta4< state_type , value_type >() ,
-            lorenz() , x , value_type( 0.0 ) , value_type( 5.0 ) , value_type( 0.125f ) ,
+            lorenz() , x , value_type( 0.0 ) , value_type( 5.0 ) , value_type( 0.0625f ) ,
             streaming_observer( cout ) );
     //]
 

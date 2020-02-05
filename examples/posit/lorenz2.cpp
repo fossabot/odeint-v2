@@ -26,9 +26,11 @@ const double R = 28.0;
 const double b = 8.0 / 3.0;
 
 constexpr size_t nbits = 256;
-constexpr size_t es = 2;
+constexpr size_t es = 5;
+using Real = sw::unum::posit<nbits, es>;
+//using Real = float;
 
-using value_type = sw::unum::posit<nbits, es>;
+using value_type = Real;
 using state_type = boost::array< value_type, 3 >;
 
 void lorenz(const state_type &x, state_type &dxdt, double t)
@@ -46,5 +48,5 @@ void write_lorenz(const state_type &x, const double t)
 int main(int argc, char **argv)
 {
 	state_type x = { 10.0 , 1.0 , 1.0 }; // initial conditions
-	integrate(lorenz, x, 0.0, 25.0, 0.1, write_lorenz);
+	integrate(lorenz, x, 0.0, 5.0, 0.125, write_lorenz);
 }
